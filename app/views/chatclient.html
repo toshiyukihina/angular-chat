@@ -1,5 +1,11 @@
-<input type="text" ng-model="msg">
-<button type="button" class="btn btn-primary" ng-disabled="!msg" ng-click="send(msg)">Send</button>
-<ul>
-  <li ng-repeat="msg in msgs">{{msg}}</li>
-</ul>
+<form class="form-inline">
+  <button ng-click="connect()" class="btn btn-default">Connect</button>
+  <input type="text" ng-model="text" placeholder="input message to send" class="message"></input>
+  <button ng-click="send()" class="btn btn-default" ng-disabled="!text">send</button>
+</form>
+
+<table class="table table-striped">
+  <tr ng-repeat="message in messages track by $index">
+    <td>{{message}}</td>
+  </tr>
+</table>

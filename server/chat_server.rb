@@ -1,37 +1,33 @@
 require 'em-websocket'
-
-EM.run {
-  EM::WebSocket.run(:host => "0.0.0.0", :port => 3000, :debug => true) do |ws|
-    ws.onopen { |handshake|
-      puts "WebSocket opened #{{
-        :path => handshake.path,
-        :query => handshake.query,
-        :origin => handshake.origin,
-      }}"
-
-      ws.send "Hello Client!"
-    }
-    ws.onmessage { |msg|
-      ws.send "Pong: #{msg}"
-    }
-    ws.onclose {
-      puts "WebSocket closed"
-    }
-    ws.onerror { |e|
-      puts "Error: #{e.message}"
-    }
+ 
+index = 1
+connections = {}
+ 
+def login_names(connections)
+  connections.map {|ws, name| name}.join(", ")
+end
+ 
+EM.run do
+  EM::WebSocket.run(:host => "0.0.0.0", :port => 3000) do |ws|
+    ws.onopen do |handshake|
+      name  = "Guest#{index}"
+      connections[ws] = name
+      index += 1
+ 
+      ws.send "[Server] Hello #{name}"
+      ws.send "[Server] Members are: #{login_names(connections)}"
+    end
+ 
+    ws.onclose do
+      connections.delete(ws)
+    end
+ 
+    ws.onmessage do |msg|
+      sender = connections[ws]
+ 
+      connections.each do |cws, name|
+        cws.send "[#{sender}] #{msg}"
+      end
+    end
   end
-}
-
-# conns = []
-
-# EM::WebSocket.start(host: "localhost", port: 3000) do |c|
-#   c.onopen do
-#     puts '>> client connected.'
-#     conns << c
-#   end
-#   c.onmessage do |msg|
-#     puts '<< dispatch message.'
-#     conns.each {|conn| conn.send }
-#   end
-# end
+end
