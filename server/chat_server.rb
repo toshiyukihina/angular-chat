@@ -10,6 +10,7 @@ end
 EM.run do
   EM::WebSocket.run(:host => "0.0.0.0", :port => 3000) do |ws|
     ws.onopen do |handshake|
+      puts "onopen"
       name  = "Guest#{index}"
       connections[ws] = name
       index += 1
@@ -19,6 +20,7 @@ EM.run do
     end
  
     ws.onclose do
+      puts "onclose";
       connections.delete(ws)
     end
  

@@ -1,11 +1,34 @@
-<form class="form-inline">
-  <button ng-click="connect()" class="btn btn-default">Connect</button>
-  <input type="text" ng-model="text" placeholder="input message to send" class="message"></input>
-  <button ng-click="send()" class="btn btn-default" ng-disabled="!text">send</button>
-</form>
+<p>
+  <div class="row">
+    <div class="col-md-8">
+      <input type="text" ng-model="url" class="form-control input-lg" ng-disabled="!closed()" placeholder="Enter URL"></input>
+    </div>
+    <div class="col-md-4">
+      <button ng-click="connect()" class="btn btn-primary btn-lg" ng-disabled="!closed() || !url">Connect</button>
+      <button ng-click="disconnect()" class="btn btn-danger btn-lg" ng-disabled="closed()">Disconnect</button>
+    </div>
+  </div>
+</p>
 
-<table class="table table-striped">
-  <tr ng-repeat="message in messages track by $index">
-    <td>{{message}}</td>
-  </tr>
-</table>
+<p>
+  <div class="row">
+    <div class="col-md-8">
+      <input type="text" ng-model="text" class="form-control input-lg" ng-disabled="closed()" placeholder="input message to send"></input>
+    </div>
+    <div class="col-md-4">
+      <button ng-click="send()" class="btn btn-default btn-lg" ng-disabled="!text">send</button>
+    </div>
+  </div>
+</p>
+
+<p>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-bordered table-striped table-hover">
+        <tr ng-repeat="message in messages track by $index">
+          <td>{{message}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</p>
